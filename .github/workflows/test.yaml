@@ -19,7 +19,7 @@ jobs:
         with:
          binaryPath: files/app.exe
          verify: "true"
-         keystore: ${{ secrets.KEYSTORE }}
-         password: ${{ secrets.PASSWORD }}
+         keystore: ${{ secrets.WINDOWS_CODESIGN_CERT }}
+         password: ${{ secrets.WINDOWS_CODESIGN_PASS }}
          appName: 'NodeFactory'
          domain: 'nodefactory.io'
