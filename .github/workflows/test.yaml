@@ -1,0 +1,25 @@
+
+name: Test action
+
+on:
+  push:
+    branches:
+      - 'master'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Backup test
+        run: cp files/test.exe files/app.exe
+      - name: Sign binary
+        uses: ./
+        with:
+         binaryPath: files/app.exe
+         verify: "true"
+         keystore: ${{ secrets.KEYSTORE }}
+         password: ${{ secrets.PASSWORD }}
+         appName: 'NodeFactory'
+         domain: 'nodefactory.io'

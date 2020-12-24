@@ -1,9 +1,33 @@
-name: 'Sign Windows Binary'
-author: 'Jon Friesen'
+name: 'Sign Windows Binar'
+author: 'NodeFactory'
 branding:
   icon: 'key'
   color: 'blue'
-description: 'Signs a Windows binary'
+description: 'Signs a Windows binary with pfx keystore'
+
+inputs:
+  keystore:
+    description: "Pfx keystore"
+    required: true
+  password:
+    description: "Pfx keystore password"
+    required: false
+    default: ""
+  appName:
+    description: "Application name"
+    required: false
+    default: ""
+  domain:
+    description: "Domain"
+    required: false
+    default: ""
+  binaryPath:
+    description: "Path to windows binary to be signed"
+    required: true
+  verify:
+    description: "Verify signed binary"
+    required: false
+    default: "false"
 runs:
   using: 'docker'
   image: 'Dockerfile'

@@ -1,20 +1,23 @@
-#!/bin/bash
+#!/bin/bash -l
 
 set -e
 
-if [[ -z "$GITHUB_WORKSPACE" ]]; then
-  echo "Set the GITHUB_WORKSPACE env variable."
-  exit 1
-fi
+istrue () {
+  case $1 in
+    "true"|"yes"|"y") return 0;;
+    *) return 1;;
+  esac
+}
 
-echo "--> outputting cert and key to files"
+echo "--> outputting keystore to file"
 mkdir /certs
 # The quotations around the cert/key vars are very import to handle line breaks
-echo "${WINDOWS_CERT}" > /certs/bundle.crt
-echo "${WINDOWS_KEY}" > /certs/codesign.key
+echo "${INPUT_KEYSTORE}" | xargs | base64 -d > /certs/bundle.pfx
 
 echo "--> signing binary"
-/osslsigncode/osslsigncode-1.7.1/osslsigncode sign -certs /certs/bundle.crt -key /certs/codesign.key -h sha256 -n ${NAME} -i ${DOMAIN} -t "http://timestamp.verisign.com/scripts/timstamp.dll" -in ${BINARY} -out /signedbinary
+/usr/local/bin/osslsigncode sign -pkcs12 /certs/bundle.pfx -pass ${INPUT_PASSWORD} -n ${INPUT_APPNAME} -i ${INPUT_DOMAIN} -t "http://timestamp.verisign.com/scripts/timstamp.dll" -in ${INPUT_BINARYPATH} -out /signedbinary
 
 echo "--> overwriting existing binary with signed binary"
-cp /signedbinary ${BINARY}
+cp /signedbinary ${INPUT_BINARYPATH}
+
+if istrue "$INPUT_VERIFY"; then /usr/local/bin/osslsigncode verify -in ${INPUT_BINARYPATH}; fi
