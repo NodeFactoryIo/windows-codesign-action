@@ -15,7 +15,7 @@ mkdir /certs
 echo "${INPUT_KEYSTORE}" | xargs | base64 -d > /certs/bundle.pfx
 
 echo "--> signing binary"
-/usr/local/bin/osslsigncode sign -pkcs12 /certs/bundle.pfx -pass ${INPUT_PASSWORD} -n ${INPUT_APPNAME} -i ${INPUT_DOMAIN} -t "http://timestamp.verisign.com/scripts/timstamp.dll" -in ${INPUT_BINARYPATH} -out /signedbinary
+/usr/local/bin/osslsigncode sign -pkcs12 /certs/bundle.pfx -pass ${INPUT_PASSWORD} -n ${INPUT_APPNAME} -i ${INPUT_DOMAIN} -t "http://timestamp.globalsign.com/scripts/timstamp.dll" -in ${INPUT_BINARYPATH} -out /signedbinary
 
 echo "--> overwriting existing binary with signed binary"
 cp /signedbinary ${INPUT_BINARYPATH}
